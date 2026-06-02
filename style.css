@@ -1,8 +1,8 @@
 /* Core Resets & Variables */
 :root {
     --primary-color: #00ff66; /* Vibrant Tech Green */
-    --dark-bg: #0f172a;       /* Deep Slate Dark Blue/Black */
-    --card-bg: #1e293b;       /* Slightly lighter slate for contrast */
+    --dark-bg: #070b14;       /* Base deep dark black/slate */
+    --card-bg: #101726;       /* Clean matching contrast for grid containers */
     --text-color: #cbd5e1;    /* Crisp light gray for readability */
     --white: #ffffff;
     --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -18,11 +18,34 @@
 
 body {
     color: var(--text-color);
-    background-color: var(--dark-bg);
+    background-color: #070b14; 
     line-height: 1.6;
     overflow-x: hidden;
+    position: relative;
+    z-index: 0; 
 }
 
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 50%, rgba(20, 59, 150, 0.604) 20%, rgba(14, 195, 86, 0.45) 100%);
+    z-index: -1; 
+    animation: pulseGlow 6s ease-in-out infinite; 
+    pointer-events: none; 
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 0.2; /* The glow fades down to almost invisible */
+    }
+    50% {
+        opacity: 1;   /* The glow peaks at its brightest point */
+    }
+}
 /* Keyframe Animations */
 @keyframes fadeInUp {
     from {
@@ -45,55 +68,66 @@ body {
     50% { text-shadow: 0 0 15px rgba(0, 255, 102, 0.6); }
 }
 
-/* Navbar */
+/* Navbar Layout & Alignment */
 header {
-    background: rgba(15, 23, 42, 0.9);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(7, 11, 20, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     position: fixed;
     width: 100%;
     top: 0;
+    left: 0;
     z-index: 1000;
     animation: fadeIn 1s ease-in-out;
 }
 
-.navbar {
+nav {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center; /* Horizontally centers the buttons perfectly on screen */
+    align-items: center;     /* Centers items vertically */
+    gap: 45px;               /* Spreads the individual links out evenly */
     max-width: 1100px;
     margin: 0 auto;
     padding: 1.2rem 2rem;
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--white);
-}
-
-.logo span {
-    color: var(--primary-color);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-}
-
-.nav-links li {
-    margin-left: 2rem;
-}
-
-.nav-links a {
+/* Navigation Typography & Hover Effects */
+nav a {
     text-decoration: none;
     color: var(--text-color);
+    font-size: 1.1rem;
     font-weight: 500;
+    letter-spacing: 0.5px;
     transition: var(--transition);
+    position: relative;
+    padding: 4px 0;
 }
 
-.nav-links a:hover {
+nav a:hover {
     color: var(--primary-color);
+}
+
+/* Active Page Highlights */
+nav a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+    border-radius: 2px;
+}
+
+/* Structural Header Padding for Page Content */
+.section, .content-container {
+    padding-top: 120px !important; 
 }
 
 /* Hero Section with Animation */
@@ -102,7 +136,6 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 80% 20%, rgba(0, 255, 102, 0.05) 0%, rgba(15, 23, 42, 1) 100%);
     text-align: center;
     padding: 0 2rem;
 }
@@ -176,9 +209,8 @@ header {
     text-align: center;
 }
 
-/* Base sections are dark now, so backgrounds are uniform or layered */
-.bg-light { background-color: rgba(30, 41, 59, 0.5); max-width: 100%; border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); }
-.bg-dark { background-color: #090d16; max-width: 100%; }
+.bg-light { background-color: rgba(30, 41, 59, 0.3); max-width: 100%; border-top: 1px solid rgba(255,255,255,0.01); border-bottom: 1px solid rgba(255,255,255,0.01); }
+.bg-dark { background-color: #05080f; max-width: 100%; }
 
 .section-title {
     font-size: 2.2rem;
@@ -196,6 +228,7 @@ header {
     margin: 10px auto 0 auto;
     border-radius: 2px;
 }
+
 /* About Section Side-by-Side Layout */
 .about-container {
     display: flex;
@@ -216,14 +249,14 @@ header {
 .about-image img {
     width: 100%;
     height: auto;
-    display: block; /* Prevents hidden inline spacing bugs */
+    display: block;
     border-radius: 12px; 
     border: 2px solid var(--primary-color); 
     box-shadow: 0 0 15px rgba(0, 255, 102, 0.2); 
 }
 
 .about-text {
-    flex: 1; /* Allows text to naturally fill up the remaining wide space */
+    flex: 1;
     font-size: 1.1rem;
     color: var(--text-color);
 }
@@ -237,7 +270,7 @@ header {
     }
     
     .about-image {
-        flex: initial; /* Resets the desktop constraint on mobile devices */
+        flex: initial; 
         width: 200px; 
     }
 }
@@ -373,7 +406,7 @@ header {
 }
 
 footer {
-    background-color: #090d16;
+    background-color: #05080f;
     color: #64748b;
     text-align: center;
     padding: 1.5rem;
@@ -383,7 +416,8 @@ footer {
 
 /* Responsive Breakpoints */
 @media (max-width: 768px) {
-    .nav-links { display: none; }
+    header { padding: 0.5rem 0; }
+    nav { gap: 20px; padding: 1rem; }
     .hero-content h1 { font-size: 2.5rem; }
     .hero-content h2 { font-size: 1.4rem; }
     .project-info p { height: auto; }
