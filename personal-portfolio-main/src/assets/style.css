@@ -1,0 +1,980 @@
+/* ==========================================================================
+   1. CORE RESETS & GLOBAL VARIABLES
+   ========================================================================== */
+:root {
+  --primary-color: #00ff66;
+  --dark-bg: #070b14;
+  --card-bg: #101726;
+  --text-color: #cbd5e1;
+  --white: #ffffff;
+  --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  color: var(--text-color);
+  background-color: var(--dark-bg);
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 0;
+  /* This makes Baumans the default for all text on the site */
+  font-family: "Baumans", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* ==========================================================================
+   2. COLLIDING ORB ANIMATIONS
+   ========================================================================== */
+
+.orb {
+    position: fixed;
+    width: 150px; /* Smaller size to look more like stars */
+    height: 150px;
+    border-radius: 50%;
+    filter: blur(40px); /* Tighter glow */
+    z-index: -1;
+    opacity: 0.8;
+    /* Speed set to 1.5s for that fast "star" feel */
+    
+}
+/* Update the existing .glow-flash class */
+.glow-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* Use 'circle' and define a fixed size so it doesn't stretch */
+    background: radial-gradient(circle at center, rgba(0, 255, 102, 0.25) 0%, rgba(0, 119, 255, 0.25) 50%, transparent 70%);
+    pointer-events: none;
+    z-index: -2;
+    opacity: 1;
+    /* This makes the background element itself stay perfectly circular */
+    border-radius: 50%;
+    /* Set a large, equal width/height to keep it round */
+    width: 800px;
+    height: 800px;
+    
+    animation: slowPulseGlow 4s ease-in-out infinite, wander 16s ease-in-out infinite;
+}
+
+@keyframes wander {
+    0% {
+        transform: translate(-20vw, -20vh); /* Start near Top-Left corner */
+    }
+    25% {
+        transform: translate(40vw, -20vh);  /* Glide to Top-Right corner */
+    }
+    50% {
+        transform: translate(40vw, 40vh);   /* Move down to Bottom-Right corner */
+    }
+    75% {
+        transform: translate(-20vw, 40vh);  /* Slide over to Bottom-Left corner */
+    }
+    100% {
+        transform: translate(-20vw, -20vh); /* Smooth return back to Top-Left */
+    }
+}
+
+.orb-1 { background: #0077ff; top: -100px; left: -100px; }
+.orb-2 { background: #00c3ff; bottom: -100px; right: -100px; }
+
+
+.orb-1 { animation-name: moveOrb1; }
+.orb-2 { animation-name: moveOrb2; }
+@keyframes moveOrb1 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
+    50% { transform: translate(45vw, 45vh) scale(1.5) rotate(180deg); }
+    100% { transform: translate(40vw, 40vh) scale(2.5); opacity: 0; } /* Merges and fades out */
+}
+
+@keyframes moveOrb2 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
+    50% { transform: translate(-45vw, -45vh) scale(1.5) rotate(-180deg); }
+    100% { transform: translate(-40vw, -40vh) scale(2.5); opacity: 0; } /* Merges and fades out */
+}
+/* ==========================================================================
+   3. GLOBAL KEYFRAME ANIMATIONS
+   ========================================================================== */
+
+   /* Slide-in animation from the left for the hero card */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px); /* Starts 50px to the left */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0); /* Slides to its original position */
+    }
+}
+
+/* Fade-in animation for navigation */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    text-shadow: 0 0 4px rgba(0, 255, 102, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(0, 255, 102, 0.6);
+  }
+}
+
+/* ==========================================================================
+   4. NAVIGATION BAR LAYOUT & TYPOGRAPHY
+   ========================================================================== */
+header {
+  backdrop-filter: blur(12px);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  animation: fadeIn 1s ease-in-out;
+  animation: fadeInDown 1s ease-out forwards;
+}
+
+nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 45px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.2rem 2rem;
+}
+
+/* Explicitly set the font for nav links here */
+nav a:not(.logo) {
+  font-family: "Baumans", sans-serif; /* Forces navigation to use Baumans */
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: var(--transition);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 0.5rem 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover and Active states remain consistent */
+nav a:not(.logo):hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+nav a.active {
+  background: rgba(0, 255, 102, 0.1);
+  border-color: rgba(0, 255, 102, 0.3);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+nav a.active::after {
+  display: none;
+}
+/* ==========================================================================
+   5. REUSABLE CONTAINERS, SECTIONS & BUTTONS
+   ========================================================================== */
+.section,
+.content-container {
+  padding-top: 120px !important;
+}
+
+.section {
+  padding: 6rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bg-light {
+  background-color: rgba(30, 41, 59, 0.3);
+  max-width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.01);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+}
+.bg-dark {
+  background-color: #05080f;
+  max-width: 100%;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  color: var(--white);
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 10px auto 0 auto;
+  border-radius: 2px;
+}
+
+/* Call to Action Buttons */
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 0.85rem 1.8rem;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 30px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #00cc52;
+  transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   6. HERO LANDING SECTION
+   ========================================================================== */
+.hero-content {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 1s ease-out;
+  animation: slideInLeft 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+ animation: slideInLeft 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+
+  /* This locks the card text to the font you prefer */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Baumans", sans-serif;
+}
+
+.hero-content .highlight {
+  /* Forces the name to use Michroma */
+  font-family: "Michroma", sans-serif;
+  text-transform: uppercase;
+}
+.hero-content h1 .highlight {
+    font-family: "Michroma", sans-serif !important;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    animation: glow 3s infinite;
+}
+
+.hero-content .highlight {
+  color: var(--primary-color);
+  animation: glow 3s infinite;
+
+  /* This ensures your name styling remains using Michroma */
+  font-family: "Michroma", sans-serif;
+  text-transform: uppercase;
+}
+
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 2rem;
+  padding-top: 120px;
+}
+/* ==========================================================================
+   7. ABOUT ME SPLIT-LAYOUT
+   ========================================================================== */
+.about-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: left;
+  width: 100%;
+}
+
+.about-image {
+  flex: 0 0 280px;
+  max-width: 300px;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+}
+
+.about-text {
+  flex: 1;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+/* ==========================================================================
+   8. CORE TECH SKILLS GRID
+   ========================================================================== */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.skill-card {
+  background: var(--card-bg);
+  padding: 2rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: var(--transition);
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 20px rgba(0, 255, 102, 0.05);
+}
+
+.skill-card h3 {
+  color: var(--white);
+}
+
+.skill-card i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #64748b;
+  transition: var(--transition);
+}
+
+.skill-percent {
+  margin-top: 0.75rem;
+  color: var(--primary-color);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Brand colors only appear on hover */
+.skill-card:hover .js-icon {
+  color: #f7df1e;
+}
+.skill-card:hover .python-icon {
+  color: #3776ab;
+}
+.skill-card:hover .html-icon {
+  color: #e34f26;
+}
+.skill-card:hover .css-icon {
+  color: #1572b6;
+}
+.skill-card:hover .git-icon {
+  color: #f05032;
+}
+.skill-card:hover .linux-icon {
+  color: #a7f3d0;
+}
+
+/* ==========================================================================
+   9. APPLICATION PROJECTS DISPLAY GRID
+   ========================================================================== */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: left;
+  transition: var(--transition);
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-color);
+  box-shadow: 0 12px 25px rgba(0, 255, 102, 0.05);
+}
+
+.project-info {
+  padding: 1.5rem;
+}
+
+.project-info h3 {
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.project-info p {
+  font-size: 0.95rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  height: 70px;
+}
+
+.project-tech {
+  margin-bottom: 1.5rem;
+}
+
+.project-tech span {
+  background-color: rgba(0, 255, 102, 0.1);
+  color: var(--primary-color);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.4rem;
+}
+
+.project-links a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.project-links a:hover {
+  color: var(--white);
+}
+
+/* ==========================================================================
+   10. INTERACTIVE VISUAL HOBBY GALLERY (BASE LAYOUT)
+   ========================================================================== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.gallery-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: var(--transition);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+  transition: var(--transition);
+}
+
+.gallery-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-color);
+}
+
+.gallery-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Hover Overlay Display Container */
+.gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(transparent, rgba(7, 11, 20, 0.95));
+  padding: 1.5rem 1rem;
+  opacity: 0;
+  transition: var(--transition);
+  overflow: hidden; /* CRUCIAL: Clips moving elements inside boundaries */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery-card:hover .gallery-overlay {
+  opacity: 1;
+}
+
+/* Base Typographic Content Inside Overlay */
+.gallery-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 8px var(--primary-color));
+}
+
+.gallery-overlay h3 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.gallery-overlay p {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+/* ==========================================================================
+   11. CUSTOM TILE ANIMATIONS & ANIMATION KEYFRAMES
+   ========================================================================== */
+
+/* ─── A. LAPTOP CODE ENVIRONMENT CROP SCREEN ─── */
+.Code-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  object-position: center 0%;
+  transition: transform 0.4s ease;
+}
+
+.gallery-card:hover .Code-img {
+  transform: scale(1.5);
+  transform-origin: center top;
+}
+
+/* ─── B. DEVELOPER EMBEDDED CODE BRACKETS SYMBOLS ─── */
+.code-animation-wrapper {
+  display: flex;
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 8px var(--primary-color));
+}
+
+.code-animation-wrapper span {
+  transition:
+    transform 0.4s ease-out,
+    opacity 0.4s ease-out;
+  opacity: 0;
+  display: inline-block;
+}
+
+.bracket-left {
+  transform: translateX(-20px);
+}
+.slash {
+  transform: scale(0) rotate(-45deg);
+}
+.bracket-right {
+  transform: translateX(20px);
+}
+
+.gallery-card:hover .bracket-left {
+  transform: translateX(0);
+  opacity: 1;
+}
+.gallery-card:hover .bracket-right {
+  transform: translateX(0);
+  opacity: 1;
+}
+.gallery-card:hover .slash {
+  transform: scale(1) rotate(0deg);
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+/* ─── C. PHOTOGRAPHY CAMERA AUTO-FOCUS APERTURE SPIN ─── */
+.fa-camera {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.4));
+}
+
+@keyframes continuousApertureSpin {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.4));
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.5));
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.4));
+  }
+}
+
+.gallery-card:hover .fa-camera {
+  animation: continuousApertureSpin 5s linear infinite;
+}
+
+/* ─── D. 3D SIDEWAYS CARD SPIN (MUSIC HEADPHONES) ─── */
+@keyframes sidewaysSpin {
+  0% {
+    transform: scale(1) rotateY(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotateY(180deg);
+  }
+  100% {
+    transform: scale(1) rotateY(360deg);
+  }
+}
+
+.gallery-card:hover .fa-headphones,
+.gallery-card:hover .fa-headphones-simple,
+.gallery-card:hover .code-animation-wrapper {
+  animation: sidewaysSpin 5s linear infinite;
+}
+
+/* ─── E. FITNESS SPRINT & CONTINUOUS RUNNING LOOP ─── */
+@keyframes continuousRunLoop {
+  0% {
+    transform: translateX(-150px) scale(1) translateY(0) rotate(10deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translateX(-50px) scale(1.05) translateY(-4px) rotate(15deg);
+  }
+  50% {
+    transform: translateX(0) scale(1) translateY(0) rotate(10deg);
+  }
+  75% {
+    transform: translateX(50px) scale(1.05) translateY(-4px) rotate(15deg);
+    opacity: 1;
+  }
+  95% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(150px) scale(1) translateY(0) rotate(10deg);
+    opacity: 0;
+  }
+}
+
+.fa-person-running,
+.fa-running {
+  display: inline-block;
+  transition: filter 0.3s ease;
+}
+
+.gallery-card:hover .fa-person-running,
+.gallery-card:hover .fa-running {
+  animation: continuousRunLoop 1.5s linear infinite;
+  filter: drop-shadow(0 0 8px var(--primary-color));
+}
+
+/* ==========================================================================
+   12. CONTACT INFO & COMMUNICATIONS
+   ========================================================================== */
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.contact-item {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.7rem 1.5rem;
+  border-radius: 5px;
+}
+
+.contact-item:hover {
+  background-color: var(--primary-color);
+  color: #0f172a;
+  border-color: var(--primary-color);
+  box-shadow: 0 5px 15px rgba(0, 255, 102, 0.2);
+}
+
+/* ==========================================================================
+   13. FOOTER SIGNATURE BAR
+   ========================================================================== */
+footer {
+  background-color: #05080f;
+  color: #64748b;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* ==========================================================================
+   14. GLOBAL MEDIA QUERY RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 768px) {
+  header {
+    padding: 0.5rem 0;
+  }
+  nav {
+    gap: 20px;
+    padding: 1rem;
+  }
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  .hero-content h2 {
+    font-size: 1.4rem;
+  }
+  .project-info p {
+    height: auto;
+  }
+
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .about-image {
+    flex: initial;
+    width: 200px;
+  }
+}
+/* ─── F. GET IN TOUCH GALLERY TILE SPECIALS ─── */
+.contact-tile-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  filter: brightness(
+    0.7
+  ); /* Slightly dims the preview photo so text pops instantly */
+  transition: var(--transition);
+}
+
+.gallery-card:hover .contact-tile-img {
+  transform: scale(1.08); /* Clean, controlled zoom on hover */
+}
+
+/* Make sure the clickable button inside the hover overlay stands out nicely */
+.tile-btn {
+  margin-top: 0.75rem !important;
+  padding: 0.5rem 1.2rem !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Paper plane animation timeline when hovering over the card */
+@keyframes paperPlaneSwoop {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(20px, -20px) scale(0.8);
+    opacity: 0;
+  } /* Flies top-right off screen */
+  31% {
+    transform: translate(-20px, 20px) scale(0.8);
+    opacity: 0;
+  } /* Teleports to bottom-left hidden */
+  70% {
+    transform: translate(0, 0) scale(1.1);
+    opacity: 1;
+  } /* Glides back into center place */
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+.gallery-card:hover .contact-icon {
+  animation: paperPlaneSwoop 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+/* ==========================================================================
+   15. CONTACT FORM STYLING
+   ========================================================================== */
+.contact-subtitle {
+  max-width: 600px;
+  margin: -2rem auto 3rem auto;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.contact-wrapper {
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+  background: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: #070b14; /* Deep dark background matching the page body */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 1rem;
+  transition: var(--transition);
+  outline: none;
+}
+
+/* Allow vertical expansion, prevent breaking widths layout */
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Tech green glow effect when clicking/focusing into fields */
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+  background-color: #0c1220; /* Subtle background shift on type */
+}
+
+/* Clean slate gray color for placeholder suggestions */
+::placeholder {
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+/* Full width scaling for the primary submission action */
+.btn.primary-btn {
+  background-color: var(--primary-color);
+  color: #0f172a;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+/* ==========================================================================
+   LOGO STYLING
+   ========================================================================== */
+nav a.logo {
+  margin-right: auto;
+    color: var(--primary-color);
+    font-family: "BBH Bartle", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+    
+    /* Add these three lines to clear the line */
+    text-decoration: none !important;
+    border-bottom: none !important;
+    background-image: none !important;
+}
+
+nav a.logo:hover {
+  color: var(--white);
+}
+
+nav a.logo::after {
+  display: none !important; /* Removes the underline effect for the logo */
+}
