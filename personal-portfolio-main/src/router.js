@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './views/HomeView.vue'
 import AboutView from './views/AboutView.vue'
+import SkillsView from './views/SkillsView.vue'
 import ProjectsView from './views/ProjectsView.vue'
-import GalleryView from './views/GalleryView.vue'
 import ContactView from './views/ContactView.vue'
 import ThankYouView from './views/ThankYouView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/about', name: 'about', component: AboutView },
+  { path: '/skills', name: 'skills', component: SkillsView },
   { path: '/projects', name: 'projects', component: ProjectsView },
-  { path: '/gallery', name: 'gallery', component: GalleryView },
+  { path: '/gallery', redirect: '/#experience' },
   { path: '/contact', name: 'contact', component: ContactView },
   { path: '/thank-you', name: 'thank-you', component: ThankYouView },
 ]
@@ -18,16 +19,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior() {
-    return { top: 0 }
+  scrollBehavior(to) {
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    }
+
+    return { top: 0, behavior: 'smooth' }
   },
 })
 
 const titles = {
   home: 'Stephan Bennett | Software Developer',
   about: 'Stephan Bennett | About Me',
+  skills: 'Stephan Bennett | Skills',
   projects: 'Stephan Bennett | Projects',
-  gallery: 'Stephan Bennett | Gallery',
   contact: 'Contact | Portfolio',
   'thank-you': 'Message Sent | Stephan Bennett',
 }

@@ -2,23 +2,26 @@
    1. CORE RESETS & GLOBAL VARIABLES
    ========================================================================== */
 :root {
-  --primary-color: #00ff66;
-  --dark-bg: #070b14;
-  --card-bg: #101726;
-  --text-color: #cbd5e1;
-  --white: #ffffff;
+  --primary-color: #d6fb00;
+  --dark-bg: #00545f;
+  --card-bg: #06434b;
+  --text-color: #ecffb6;
+  --white: #f7ffd8;
   --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
   color: var(--text-color);
-  background-color: var(--dark-bg);
+  background:
+    radial-gradient(ellipse at 18% 18%, rgba(214, 251, 0, 0.3), transparent 38%),
+    radial-gradient(ellipse at 82% 64%, rgba(236, 255, 182, 0.14), transparent 34%),
+    linear-gradient(140deg, #00545f 0%, #06434b 58%, #003b45 100%);
+  background-attachment: fixed;
   line-height: 1.6;
   overflow-x: hidden;
   position: relative;
   z-index: 0;
-  /* This makes Baumans the default for all text on the site */
-  font-family: "Baumans", sans-serif;
+  font-family: "Michroma", sans-serif;
 }
 
 * {
@@ -26,6 +29,13 @@ body {
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 /* ==========================================================================
@@ -46,44 +56,20 @@ body {
 /* Update the existing .glow-flash class */
 .glow-flash {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    /* Use 'circle' and define a fixed size so it doesn't stretch */
-    background: radial-gradient(circle at center, rgba(0, 255, 102, 0.25) 0%, rgba(0, 119, 255, 0.25) 50%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center, rgba(214, 251, 0, 0.3) 0%, rgba(236, 255, 182, 0.16) 48%, transparent 72%);
     pointer-events: none;
     z-index: -2;
     opacity: 1;
-    /* This makes the background element itself stay perfectly circular */
     border-radius: 50%;
-    /* Set a large, equal width/height to keep it round */
     width: 800px;
     height: 800px;
-    
-    animation: slowPulseGlow 4s ease-in-out infinite, wander 16s ease-in-out infinite;
 }
 
-@keyframes wander {
-    0% {
-        transform: translate(-20vw, -20vh); /* Start near Top-Left corner */
-    }
-    25% {
-        transform: translate(40vw, -20vh);  /* Glide to Top-Right corner */
-    }
-    50% {
-        transform: translate(40vw, 40vh);   /* Move down to Bottom-Right corner */
-    }
-    75% {
-        transform: translate(-20vw, 40vh);  /* Slide over to Bottom-Left corner */
-    }
-    100% {
-        transform: translate(-20vw, -20vh); /* Smooth return back to Top-Left */
-    }
-}
-
-.orb-1 { background: #0077ff; top: -100px; left: -100px; }
-.orb-2 { background: #00c3ff; bottom: -100px; right: -100px; }
+.orb-1 { background: #d6fb00; top: -100px; left: -100px; }
+.orb-2 { background: #ecffb6; bottom: -100px; right: -100px; }
 
 
 .orb-1 { animation-name: moveOrb1; }
@@ -159,10 +145,10 @@ body {
 @keyframes glow {
   0%,
   100% {
-    text-shadow: 0 0 4px rgba(0, 255, 102, 0.2);
+    text-shadow: 0 0 4px rgba(214, 251, 0, 0.2);
   }
   50% {
-    text-shadow: 0 0 15px rgba(0, 255, 102, 0.6);
+    text-shadow: 0 0 15px rgba(214, 251, 0, 0.6);
   }
 }
 
@@ -192,7 +178,7 @@ nav {
 
 /* Explicitly set the font for nav links here */
 nav a:not(.logo) {
-  font-family: "Baumans", sans-serif; /* Forces navigation to use Baumans */
+  font-family: "Michroma", sans-serif;
   text-decoration: none;
   color: var(--text-color);
   font-size: 1.1rem;
@@ -216,9 +202,9 @@ nav a:not(.logo):hover {
   transform: translateY(-2px);
 }
 
-nav a.active {
-  background: rgba(0, 255, 102, 0.1);
-  border-color: rgba(0, 255, 102, 0.3);
+nav a.active:not(.logo) {
+  background: rgba(214, 251, 0, 0.12);
+  border-color: rgba(214, 251, 0, 0.3);
   color: var(--primary-color);
   font-weight: 600;
 }
@@ -229,9 +215,12 @@ nav a.active::after {
 /* ==========================================================================
    5. REUSABLE CONTAINERS, SECTIONS & BUTTONS
    ========================================================================== */
-.section,
-.content-container {
+.section {
   padding-top: 120px !important;
+}
+
+.content-container {
+  padding-top: 0 !important;
 }
 
 .section {
@@ -241,14 +230,19 @@ nav a.active::after {
   text-align: center;
 }
 
+.about-text {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+}
+
 .bg-light {
-  background-color: rgba(30, 41, 59, 0.3);
+  background-color: rgba(0, 84, 95, 0.32);
   max-width: 100%;
   border-top: 1px solid rgba(255, 255, 255, 0.01);
   border-bottom: 1px solid rgba(255, 255, 255, 0.01);
 }
 .bg-dark {
-  background-color: #05080f;
+  background-color: #003b45;
   max-width: 100%;
 }
 
@@ -283,7 +277,7 @@ nav a.active::after {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #000000;
+  background-color: #003b45;
   color: #ffffff;
   padding: 0.85rem 1.8rem;
   text-decoration: none;
@@ -295,7 +289,7 @@ nav a.active::after {
 }
 
 .cta-button:hover {
-  background-color: #00cc52;
+  background-color: #d6fb00;
   transform: translateY(-3px);
 }
 
@@ -316,9 +310,7 @@ nav a.active::after {
 
 
   /* This locks the card text to the font you prefer */
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-family: "Baumans", sans-serif;
+  font-family: "Michroma", sans-serif;
 }
 
 .hero-content .highlight {
@@ -349,7 +341,7 @@ nav a.active::after {
   justify-content: center;
   text-align: center;
   padding: 0 2rem;
-  padding-top: 120px;
+  padding-top: 0;
 }
 /* ==========================================================================
    7. ABOUT ME SPLIT-LAYOUT
@@ -376,7 +368,7 @@ nav a.active::after {
   display: block;
   border-radius: 12px;
   border: 2px solid var(--primary-color);
-  box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+  box-shadow: 0 0 15px rgba(214, 251, 0, 0.2);
 }
 
 .about-text {
@@ -407,7 +399,7 @@ nav a.active::after {
 .skill-card:hover {
   transform: translateY(-5px);
   border-color: var(--primary-color);
-  box-shadow: 0 10px 20px rgba(0, 255, 102, 0.05);
+  box-shadow: 0 10px 20px rgba(214, 251, 0, 0.08);
 }
 
 .skill-card h3 {
@@ -417,7 +409,7 @@ nav a.active::after {
 .skill-card i {
   font-size: 3rem;
   margin-bottom: 1rem;
-  color: #64748b;
+  color: #b8d875;
   transition: var(--transition);
 }
 
@@ -431,22 +423,22 @@ nav a.active::after {
 
 /* Brand colors only appear on hover */
 .skill-card:hover .js-icon {
-  color: #f7df1e;
+  color: #d6fb00;
 }
 .skill-card:hover .python-icon {
-  color: #3776ab;
+  color: #ecffb6;
 }
 .skill-card:hover .html-icon {
-  color: #e34f26;
+  color: #d6fb00;
 }
 .skill-card:hover .css-icon {
-  color: #1572b6;
+  color: #ecffb6;
 }
 .skill-card:hover .git-icon {
-  color: #f05032;
+  color: #d6fb00;
 }
 .skill-card:hover .linux-icon {
-  color: #a7f3d0;
+  color: #ecffb6;
 }
 
 /* ==========================================================================
@@ -470,7 +462,7 @@ nav a.active::after {
 .project-card:hover {
   transform: translateY(-5px);
   border-color: var(--primary-color);
-  box-shadow: 0 12px 25px rgba(0, 255, 102, 0.05);
+  box-shadow: 0 12px 25px rgba(214, 251, 0, 0.08);
 }
 
 .project-info {
@@ -494,7 +486,7 @@ nav a.active::after {
 }
 
 .project-tech span {
-  background-color: rgba(0, 255, 102, 0.1);
+  background-color: rgba(214, 251, 0, 0.12);
   color: var(--primary-color);
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
@@ -515,8 +507,153 @@ nav a.active::after {
   color: var(--white);
 }
 
-/* ==========================================================================
-   10. INTERACTIVE VISUAL HOBBY GALLERY (BASE LAYOUT)
+/* ========================================================================== 
+   10. EDUCATION & EXPERIENCE TIMELINE
+   ========================================================================== */
+.timeline-section {
+  max-width: 100%;
+  padding-left: max(2rem, calc((100% - 1120px) / 2));
+  padding-right: max(2rem, calc((100% - 1120px) / 2));
+}
+
+.timeline-eyebrow,
+.timeline-date,
+.timeline-place {
+  color: var(--primary-color);
+}
+
+.timeline-eyebrow {
+  margin-bottom: 0.75rem;
+  font-family: "Michroma", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
+.timeline-section .section-title {
+  margin-bottom: 0.75rem;
+}
+
+.timeline-section .section-title span {
+  color: var(--primary-color);
+}
+
+.timeline-intro {
+  color: var(--text-color);
+  margin-bottom: 4rem;
+}
+
+.timeline {
+  position: relative;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0.5rem 0;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  box-shadow: 0 0 16px rgba(214, 251, 0, 0.28);
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  width: 50%;
+  margin-bottom: 3.5rem;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-left {
+  justify-content: flex-end;
+  padding-right: 4rem;
+  text-align: right;
+}
+
+.timeline-right {
+  margin-left: 50%;
+  padding-left: 4rem;
+  text-align: left;
+}
+
+.timeline-marker {
+  position: absolute;
+  top: 0.8rem;
+  width: 18px;
+  height: 18px;
+  border: 4px solid var(--dark-bg);
+  border-radius: 50%;
+  background: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.timeline-left .timeline-marker {
+  right: -9px;
+}
+
+.timeline-right .timeline-marker {
+  left: -9px;
+}
+
+.timeline-card {
+  width: 100%;
+  padding: 1.75rem;
+  border: 1px solid rgba(214, 251, 0, 0.2);
+  border-radius: 16px;
+  background: rgba(0, 59, 69, 0.72);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+  transition: var(--transition);
+}
+
+.timeline-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
+}
+
+.timeline-date {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.timeline-left .timeline-date {
+  justify-content: flex-end;
+}
+
+.timeline-card h3 {
+  margin-bottom: 0.35rem;
+  color: var(--white);
+  font-size: 1.15rem;
+}
+
+.timeline-place {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  background: linear-gradient(90deg, #ecffb6 0%, #d6fb00 55%, #ecffb6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.timeline-description {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  color: var(--text-color);
+  line-height: 1.7;
+}
+
+/* ========================================================================== 
+   11. INTERACTIVE VISUAL HOBBY GALLERY (BASE LAYOUT)
    ========================================================================== */
 .gallery-grid {
   display: grid;
@@ -558,7 +695,7 @@ nav a.active::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(transparent, rgba(7, 11, 20, 0.95));
+  background: linear-gradient(transparent, rgba(0, 59, 69, 0.95));
   padding: 1.5rem 1rem;
   opacity: 0;
   transition: var(--transition);
@@ -590,7 +727,7 @@ nav a.active::after {
 }
 
 .gallery-overlay p {
-  color: #cbd5e1;
+  color: #ecffb6;
   font-size: 0.85rem;
   text-align: center;
   padding: 0 1rem;
@@ -619,7 +756,7 @@ nav a.active::after {
   display: flex;
   font-size: 2.2rem;
   font-weight: 700;
-  font-family: monospace;
+  font-family: "Michroma", sans-serif;
   color: var(--primary-color);
   margin-bottom: 0.5rem;
   filter: drop-shadow(0 0 8px var(--primary-color));
@@ -663,21 +800,21 @@ nav a.active::after {
   color: var(--primary-color);
   margin-bottom: 0.5rem;
   display: inline-block;
-  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.4));
+  filter: drop-shadow(0 0 4px rgba(214, 251, 0, 0.4));
 }
 
 @keyframes continuousApertureSpin {
   0% {
     transform: scale(1) rotate(0deg);
-    filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.4));
+    filter: drop-shadow(0 0 4px rgba(214, 251, 0, 0.4));
   }
   50% {
     transform: scale(1.1) rotate(180deg);
-    filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.5));
+    filter: drop-shadow(0 0 6px rgba(214, 251, 0, 0.5));
   }
   100% {
     transform: scale(1) rotate(360deg);
-    filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.4));
+    filter: drop-shadow(0 0 4px rgba(214, 251, 0, 0.4));
   }
 }
 
@@ -767,17 +904,17 @@ nav a.active::after {
 
 .contact-item:hover {
   background-color: var(--primary-color);
-  color: #0f172a;
+  color: #00545f;
   border-color: var(--primary-color);
-  box-shadow: 0 5px 15px rgba(0, 255, 102, 0.2);
+  box-shadow: 0 5px 15px rgba(214, 251, 0, 0.2);
 }
 
 /* ==========================================================================
    13. FOOTER SIGNATURE BAR
    ========================================================================== */
 footer {
-  background-color: #05080f;
-  color: #64748b;
+  background-color: #003b45;
+  color: #b8d875;
   text-align: center;
   padding: 1.5rem;
   font-size: 0.9rem;
@@ -814,6 +951,35 @@ footer {
   .about-image {
     flex: initial;
     width: 200px;
+  }
+
+  .timeline-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .timeline::before {
+    left: 9px;
+  }
+
+  .timeline-item,
+  .timeline-right {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 2.5rem;
+    padding-right: 0;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .timeline-left .timeline-marker,
+  .timeline-right .timeline-marker {
+    left: 1px;
+    right: auto;
+  }
+
+  .timeline-left .timeline-date {
+    justify-content: flex-start;
   }
 }
 /* ─── F. GET IN TOUCH GALLERY TILE SPECIALS ─── */
@@ -905,7 +1071,7 @@ footer {
 .form-group textarea {
   width: 100%;
   padding: 0.8rem 1rem;
-  background-color: #070b14; /* Deep dark background matching the page body */
+  background-color: #003b45; /* Deep dark background matching the page body */
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   color: var(--white);
@@ -923,20 +1089,20 @@ footer {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
-  background-color: #0c1220; /* Subtle background shift on type */
+  box-shadow: 0 0 10px rgba(214, 251, 0, 0.2);
+  background-color: #06434b; /* Subtle background shift on type */
 }
 
 /* Clean slate gray color for placeholder suggestions */
 ::placeholder {
-  color: #4b5563;
+  color: #b8d875;
   font-size: 0.95rem;
 }
 
 /* Full width scaling for the primary submission action */
 .btn.primary-btn {
   background-color: var(--primary-color);
-  color: #0f172a;
+  color: #00545f;
   border-radius: 8px;
   font-weight: 700;
   text-decoration: none;
@@ -958,8 +1124,10 @@ footer {
    ========================================================================== */
 nav a.logo {
   margin-right: auto;
+    background: transparent !important;
+    box-shadow: none !important;
     color: var(--primary-color);
-    font-family: "BBH Bartle", sans-serif;
+    font-family: "Michroma", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 2.2rem;
@@ -977,4 +1145,77 @@ nav a.logo:hover {
 
 nav a.logo::after {
   display: none !important; /* Removes the underline effect for the logo */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.hero-content .highlight {
+  background: linear-gradient(90deg, #ecffb6 0%, #d6fb00 55%, #ecffb6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-content h1,
+.hero-content h2 {
+  background: none;
+  color: var(--text-color);
+  -webkit-text-fill-color: currentColor;
+}
+
+.hero-content .highlight {
+  background: none;
+  color: var(--primary-color);
+  -webkit-text-fill-color: currentColor;
+}
+
+.hero-content .highlight > span {
+  display: inline-block;
+  animation: sandSettle 1.25s cubic-bezier(0.18, 0.72, 0.24, 1) both;
+  animation-delay: calc(var(--character-index) * 75ms);
+}
+
+.hero-content .highlight > span:nth-child(4n + 1) {
+  --sand-drift: -0.12em;
+}
+
+.hero-content .highlight > span:nth-child(4n + 2) {
+  --sand-drift: 0.08em;
+}
+
+.hero-content .highlight > span:nth-child(4n + 3) {
+  --sand-drift: -0.05em;
+}
+
+@keyframes sandSettle {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translate(var(--sand-drift, 0), 0.65em) scale(0.82);
+  }
+  58% {
+    opacity: 0.75;
+    filter: blur(1.5px);
+    transform: translate(0, -0.07em) scale(1.035);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-content .highlight > span {
+    animation: none;
+  }
 }

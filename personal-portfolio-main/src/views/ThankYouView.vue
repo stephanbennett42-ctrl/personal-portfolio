@@ -50,7 +50,7 @@
   align-items: center;
   gap: 0.5rem;
   background-color: var(--primary-color);
-  color: #0f172a;
+  color: #00545f;
   padding: 0.85rem 1.8rem;
   text-decoration: none;
   font-weight: 700;
