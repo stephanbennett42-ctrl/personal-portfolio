@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const skills = [
   { name: 'JavaScript', icon: 'fab fa-js-square js-icon', percent: 80 },
@@ -11,37 +11,72 @@ const skills = [
   { name: 'Git & Bash', icon: 'fab fa-git-alt git-icon', percent: 80 },
 ]
 const nameCharacters = Array.from('Stephan Bennett')
+const nameAnimationRun = ref(0)
+const aboutPhoto = ref(null)
+const aboutPhotoVisible = ref(false)
+const aboutPhotoAnimationRun = ref(0)
 
 let observer
+let aboutObserver
+
+function replayRequestedAnimation(event) {
+  if (event.detail?.section === 'home') {
+    nameAnimationRun.value += 1
+  }
+
+  if (event.detail?.section === 'about') {
+    aboutPhotoVisible.value = true
+    aboutPhotoAnimationRun.value += 1
+    aboutObserver?.disconnect()
+  }
+}
 
 onMounted(() => {
+  window.addEventListener('portfolio:replay-animation', replayRequestedAnimation)
+
   const heroSection = document.querySelector('.hero')
   const orb1 = document.querySelector('.orb-1')
   const orb2 = document.querySelector('.orb-2')
 
-  if (!heroSection || !orb1 || !orb2) return
+  if (heroSection && orb1 && orb2) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            orb1.style.animation = 'none'
+            orb2.style.animation = 'none'
+            void orb1.offsetHeight
+            void orb2.offsetHeight
+            orb1.style.animation = 'moveOrb1 1.5s ease-out forwards'
+            orb2.style.animation = 'moveOrb2 1.5s ease-out forwards'
+          }
+        })
+      },
+      { threshold: 0.5 }
+    )
 
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
+    observer.observe(heroSection)
+  }
+
+  if (aboutPhoto.value) {
+    aboutObserver = new IntersectionObserver(
+      ([entry]) => {
         if (entry.isIntersecting) {
-          orb1.style.animation = 'none'
-          orb2.style.animation = 'none'
-          void orb1.offsetHeight
-          void orb2.offsetHeight
-          orb1.style.animation = 'moveOrb1 1.5s ease-out forwards'
-          orb2.style.animation = 'moveOrb2 1.5s ease-out forwards'
+          aboutPhotoVisible.value = true
+          aboutObserver.disconnect()
         }
-      })
-    },
-    { threshold: 0.5 }
-  )
+      },
+      { threshold: 0.35 }
+    )
 
-  observer.observe(heroSection)
+    aboutObserver.observe(aboutPhoto.value)
+  }
 })
 
 onUnmounted(() => {
+  window.removeEventListener('portfolio:replay-animation', replayRequestedAnimation)
   observer?.disconnect()
+  aboutObserver?.disconnect()
 })
 </script>
 
@@ -52,7 +87,7 @@ onUnmounted(() => {
       <div class="hero-content">
         <h1>
           Hi, I'm
-          <span class="highlight" role="text" aria-label="Stephan Bennett">
+          <span :key="nameAnimationRun" class="highlight" role="text" aria-label="Stephan Bennett">
             <span
               v-for="(character, index) in nameCharacters"
               :key="index"
@@ -70,8 +105,8 @@ onUnmounted(() => {
     <section id="about" class="section">
       <h2 class="section-title">About Me</h2>
       <div class="about-container">
-        <div class="about-image">
-          <img src="/profile picture.jpeg" alt="Stephan Bennett" />
+        <div :key="aboutPhotoAnimationRun" ref="aboutPhoto" class="about-image" :class="{ 'is-visible': aboutPhotoVisible }">
+          <img src="/profile-picture.jpg" alt="Stephan Bennett" />
         </div>
         <div class="about-text">
           <p>

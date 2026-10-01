@@ -360,6 +360,7 @@ nav a.active::after {
 .about-image {
   flex: 0 0 280px;
   max-width: 300px;
+  perspective: 1100px;
 }
 
 .about-image img {
@@ -369,6 +370,27 @@ nav a.active::after {
   border-radius: 12px;
   border: 2px solid var(--primary-color);
   box-shadow: 0 0 15px rgba(214, 251, 0, 0.2);
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.about-image.is-visible img {
+  animation: aboutPhotoFlip 1.6s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+@keyframes aboutPhotoFlip {
+  0% {
+    opacity: 0;
+    transform: rotateY(-360deg) scale(0.88);
+  }
+  78% {
+    opacity: 1;
+    transform: rotateY(12deg) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0) scale(1);
+  }
 }
 
 .about-text {
@@ -1215,7 +1237,8 @@ h6,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-content .highlight > span {
+  .hero-content .highlight > span,
+  .about-image.is-visible img {
     animation: none;
   }
 }

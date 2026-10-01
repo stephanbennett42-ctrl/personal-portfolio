@@ -4,7 +4,7 @@
       <h2 class="section-title">About Me</h2>
       <div class="about-container">
         <div class="about-image">
-          <img src="/profile picture.jpeg" alt="Stephan Bennett" />
+          <img src="/profile-picture.jpg" alt="Stephan Bennett" />
         </div>
         <div class="about-text">
           <p>
