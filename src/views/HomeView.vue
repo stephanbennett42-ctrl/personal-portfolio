@@ -1,5 +1,38 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const submitting = ref(false)
+const contactError = ref('')
+const contactForm = reactive({ name: '', email: '', message: '' })
+
+async function handleContactSubmit() {
+  submitting.value = true
+  contactError.value = ''
+
+  try {
+    const response = await fetch('https://formspree.io/f/xgobllkg', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contactForm),
+    })
+
+    if (response.ok) {
+      router.push('/thank-you')
+      return
+    }
+
+    contactError.value = 'Something went wrong. Please try again.'
+  } catch {
+    contactError.value = 'Could not send your message. Please try again.'
+  } finally {
+    submitting.value = false
+  }
+}
 
 const skills = [
   { name: 'JavaScript', icon: 'fab fa-js-square js-icon', percent: 80 },
@@ -75,6 +108,28 @@ onUnmounted(() => {
           </h1>
           <h2>Software Developer in Training</h2>
           <p>Building clean, responsive web applications and full-stack software solutions.</p>
+          <div class="hero-buttons social-links">
+            <a
+              class="cta-button"
+              href="https://github.com/stephanbennett42-ctrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Stephan Bennett on GitHub"
+            >
+              <i class="fab fa-github" aria-hidden="true"></i>
+              GitHub
+            </a>
+            <a
+              class="cta-button"
+              href="https://www.linkedin.com/in/stephan-bennett-a38351347/?isSelfProfile=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Stephan Bennett on LinkedIn"
+            >
+              <i class="fab fa-linkedin" aria-hidden="true"></i>
+              LinkedIn
+            </a>
+          </div>
         </div>
         <div :key="photoGlowRun" class="hero-photo-frame">
           <img src="/home-profile.jpg" alt="Stephan Bennett standing in front of a window" />
@@ -216,27 +271,43 @@ onUnmounted(() => {
       </p>
 
       <div class="contact-wrapper">
-        <form class="contact-form">
+        <form class="contact-form" @submit.prevent="handleContactSubmit">
           <div class="form-group">
             <label for="name">Name</label>
-            <input id="name" type="text" placeholder="Enter your name" required />
+            <input id="name" v-model="contactForm.name" name="name" type="text" placeholder="Enter your name" required />
           </div>
 
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input id="email" type="email" placeholder="name@example.com" required />
+            <input id="email" v-model="contactForm.email" name="email" type="email" placeholder="name@example.com" required />
           </div>
 
           <div class="form-group">
             <label for="message">Message</label>
-            <textarea id="message" rows="6" placeholder="Type your message here..." required></textarea>
+            <textarea id="message" v-model="contactForm.message" name="message" rows="6" placeholder="Type your message here..." required></textarea>
           </div>
 
-          <button type="submit" class="btn primary-btn submit-btn">
-            <i class="fas fa-paper-plane"></i> Send Message
+          <p v-if="contactError" class="form-error" role="alert">{{ contactError }}</p>
+
+          <button type="submit" class="btn primary-btn submit-btn" :disabled="submitting">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            {{ submitting ? 'Sending...' : 'Send Message' }}
           </button>
         </form>
       </div>
     </section>
   </main>
 </template>
+
+<style scoped>
+.form-error {
+  color: #f87171;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+</style>
