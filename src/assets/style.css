@@ -12,10 +12,14 @@
 
 body {
   color: var(--text-color);
-  background:
-    radial-gradient(ellipse at 18% 18%, rgba(214, 251, 0, 0.3), transparent 38%),
-    radial-gradient(ellipse at 82% 64%, rgba(236, 255, 182, 0.14), transparent 34%),
-    linear-gradient(140deg, #00545f 0%, #06434b 58%, #003b45 100%);
+  background-color: #00545f;
+  background-image:
+    radial-gradient(ellipse at 14% 8%, rgba(214, 251, 0, 0.28) 0%, rgba(92, 165, 73, 0.2) 30%, transparent 59%),
+    radial-gradient(ellipse at 50% 58%, rgba(236, 255, 182, 0.12) 0%, transparent 34%),
+    linear-gradient(145deg, #286b52 0%, #07545a 46%, #003b45 100%);
+  background-size: 160% 160%;
+  background-position: 0% 0%;
+  animation: paletteDrift 28s ease-in-out infinite alternate;
   background-attachment: fixed;
   line-height: 1.6;
   overflow-x: hidden;
@@ -38,53 +42,6 @@ select {
   font: inherit;
 }
 
-/* ==========================================================================
-   2. COLLIDING ORB ANIMATIONS
-   ========================================================================== */
-
-.orb {
-    position: fixed;
-    width: 150px; /* Smaller size to look more like stars */
-    height: 150px;
-    border-radius: 50%;
-    filter: blur(40px); /* Tighter glow */
-    z-index: -1;
-    opacity: 0.8;
-    /* Speed set to 1.5s for that fast "star" feel */
-    
-}
-/* Update the existing .glow-flash class */
-.glow-flash {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle at center, rgba(214, 251, 0, 0.3) 0%, rgba(236, 255, 182, 0.16) 48%, transparent 72%);
-    pointer-events: none;
-    z-index: -2;
-    opacity: 1;
-    border-radius: 50%;
-    width: 800px;
-    height: 800px;
-}
-
-.orb-1 { background: #d6fb00; top: -100px; left: -100px; }
-.orb-2 { background: #ecffb6; bottom: -100px; right: -100px; }
-
-
-.orb-1 { animation-name: moveOrb1; }
-.orb-2 { animation-name: moveOrb2; }
-@keyframes moveOrb1 {
-    0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
-    50% { transform: translate(45vw, 45vh) scale(1.5) rotate(180deg); }
-    100% { transform: translate(40vw, 40vh) scale(2.5); opacity: 0; } /* Merges and fades out */
-}
-
-@keyframes moveOrb2 {
-    0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
-    50% { transform: translate(-45vw, -45vh) scale(1.5) rotate(-180deg); }
-    100% { transform: translate(-40vw, -40vh) scale(2.5); opacity: 0; } /* Merges and fades out */
-}
 /* ==========================================================================
    3. GLOBAL KEYFRAME ANIMATIONS
    ========================================================================== */
@@ -236,13 +193,13 @@ nav a.active::after {
 }
 
 .bg-light {
-  background-color: rgba(0, 84, 95, 0.32);
+  background-color: rgba(0, 84, 95, 0.16);
   max-width: 100%;
   border-top: 1px solid rgba(255, 255, 255, 0.01);
   border-bottom: 1px solid rgba(255, 255, 255, 0.01);
 }
 .bg-dark {
-  background-color: #003b45;
+  background-color: rgba(0, 59, 69, 0.2);
   max-width: 100%;
 }
 
@@ -297,12 +254,17 @@ nav a.active::after {
    6. HERO LANDING SECTION
    ========================================================================== */
 .hero-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(180px, 23vw, 270px);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  width: min(100%, 1120px);
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 24px;
-  padding: 3rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   animation: fadeInUp 1s ease-out;
   animation: slideInLeft 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -311,6 +273,62 @@ nav a.active::after {
 
   /* This locks the card text to the font you prefer */
   font-family: "Michroma", sans-serif;
+}
+
+.hero-copy {
+  min-width: 0;
+  text-align: center;
+}
+
+.hero-photo-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid rgba(214, 251, 0, 0.5);
+  border-radius: 50%;
+}
+
+@keyframes paletteDrift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 22% 14%; }
+}
+
+.hero-photo-frame::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 260deg,
+    rgba(0, 84, 95, 0.2) 285deg,
+    #00545f 315deg,
+    rgba(214, 251, 0, 0.45) 330deg,
+    #d6fb00 345deg,
+    transparent 360deg
+  );
+  animation: circleGlowOrbit 3s ease-in-out 1 both;
+  filter: drop-shadow(0 0 6px rgba(0, 84, 95, 0.65)) drop-shadow(0 0 8px rgba(214, 251, 0, 0.65));
+}
+
+.hero-photo-frame img {
+  position: absolute;
+  inset: 2px;
+  z-index: 1;
+  display: block;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 32%;
+}
+
+@keyframes circleGlowOrbit {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .hero-content .highlight {
@@ -496,11 +514,32 @@ nav a.active::after {
   margin-bottom: 0.5rem;
 }
 
+.project-info .project-meta {
+  height: auto;
+  margin-bottom: 0.75rem;
+  color: var(--primary-color);
+  font-size: 0.85rem;
+}
+
+.project-info .project-context {
+  height: auto;
+  margin-bottom: 1rem;
+  padding-left: 0.9rem;
+  border-left: 3px solid rgba(236, 255, 182, 0.45);
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.project-info p:not(.project-meta) {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+}
+
 .project-info p {
   font-size: 0.95rem;
   color: var(--text-color);
   margin-bottom: 1.5rem;
-  height: 70px;
+  height: auto;
 }
 
 .project-tech {
@@ -954,11 +993,33 @@ footer {
     gap: 20px;
     padding: 1rem;
   }
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    padding: 6rem 1rem 2rem;
+  }
+
+  .hero-content {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .hero-photo-frame {
+    grid-row: 1;
+    width: clamp(150px, 42vw, 210px);
+  }
+
   .hero-content h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.25rem, 5vw, 2rem);
   }
   .hero-content h2 {
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 4vw, 1.3rem);
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
   }
   .project-info p {
     height: auto;
@@ -1237,7 +1298,11 @@ h6,
 }
 
 @media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
   .hero-content .highlight > span,
+  .hero-photo-frame::before,
   .about-image.is-visible img {
     animation: none;
   }

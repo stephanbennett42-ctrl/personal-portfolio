@@ -12,16 +12,17 @@ const skills = [
 ]
 const nameCharacters = Array.from('Stephan Bennett')
 const nameAnimationRun = ref(0)
+const photoGlowRun = ref(0)
 const aboutPhoto = ref(null)
 const aboutPhotoVisible = ref(false)
 const aboutPhotoAnimationRun = ref(0)
 
-let observer
 let aboutObserver
 
 function replayRequestedAnimation(event) {
   if (event.detail?.section === 'home') {
     nameAnimationRun.value += 1
+    photoGlowRun.value += 1
   }
 
   if (event.detail?.section === 'about') {
@@ -33,30 +34,6 @@ function replayRequestedAnimation(event) {
 
 onMounted(() => {
   window.addEventListener('portfolio:replay-animation', replayRequestedAnimation)
-
-  const heroSection = document.querySelector('.hero')
-  const orb1 = document.querySelector('.orb-1')
-  const orb2 = document.querySelector('.orb-2')
-
-  if (heroSection && orb1 && orb2) {
-    observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            orb1.style.animation = 'none'
-            orb2.style.animation = 'none'
-            void orb1.offsetHeight
-            void orb2.offsetHeight
-            orb1.style.animation = 'moveOrb1 1.5s ease-out forwards'
-            orb2.style.animation = 'moveOrb2 1.5s ease-out forwards'
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
-
-    observer.observe(heroSection)
-  }
 
   if (aboutPhoto.value) {
     aboutObserver = new IntersectionObserver(
@@ -75,7 +52,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('portfolio:replay-animation', replayRequestedAnimation)
-  observer?.disconnect()
   aboutObserver?.disconnect()
 })
 </script>
@@ -85,19 +61,24 @@ onUnmounted(() => {
     <!-- 1. Home / Hero Section -->
     <section id="home" class="hero">
       <div class="hero-content">
-        <h1>
-          Hi, I'm
-          <span :key="nameAnimationRun" class="highlight" role="text" aria-label="Stephan Bennett">
-            <span
-              v-for="(character, index) in nameCharacters"
-              :key="index"
-              aria-hidden="true"
-              :style="{ '--character-index': index }"
-            >{{ character === ' ' ? '\u00a0' : character }}</span>
-          </span>
-        </h1>
-        <h2>Software Developer in Training</h2>
-        <p>Building clean, responsive web applications and full-stack software solutions.</p>
+        <div class="hero-copy">
+          <h1>
+            Hi, I'm
+            <span :key="nameAnimationRun" class="highlight" role="text" aria-label="Stephan Bennett">
+              <span
+                v-for="(character, index) in nameCharacters"
+                :key="index"
+                aria-hidden="true"
+                :style="{ '--character-index': index }"
+              >{{ character === ' ' ? '\u00a0' : character }}</span>
+            </span>
+          </h1>
+          <h2>Software Developer in Training</h2>
+          <p>Building clean, responsive web applications and full-stack software solutions.</p>
+        </div>
+        <div :key="photoGlowRun" class="hero-photo-frame">
+          <img src="/home-profile.jpg" alt="Stephan Bennett standing in front of a window" />
+        </div>
       </div>
     </section>
 
@@ -138,18 +119,56 @@ onUnmounted(() => {
       <div class="projects-grid">
         <div class="project-card">
           <div class="project-info">
-            <h3>Neotech Hardware E-Commerce</h3>
+            <h3>Pawtopia</h3>
+            <p class="project-meta">Pet-care startup · 6 contributors</p>
             <p>
-              A multi-page hardware product showcase site featuring responsive CSS layouts,
-              interactive element transitions, and stylized components.
+              Find trusted care for your pet—from daycare and boarding to grooming—all in one place,
+              so you can travel or work with peace of mind.
             </p>
             <div class="project-tech">
-              <span>HTML5</span>
-              <span>CSS Grid</span>
-              <span>Bootstrap</span>
+              <span>HTML 44.4%</span>
+              <span>CSS 35.8%</span>
+              <span>JavaScript 19.8%</span>
             </div>
-            <div class="project-links">
-              <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-info">
+            <h3>ModernTech Solutions HR System</h3>
+            <p class="project-meta">Healthcare software · 5 contributors</p>
+            <p>
+              One secure HR hub for employee records, payroll, leave, and attendance—replacing
+              scattered spreadsheets and emails with a database-backed system.
+            </p>
+            <p class="project-context">
+              Built as the Life Choices Academy Module 2 Core Project.
+            </p>
+            <div class="project-tech">
+              <span>CSS 36.6%</span>
+              <span>JavaScript 36.2%</span>
+              <span>HTML 27.2%</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-info">
+            <h3>ApplyDirect-SA</h3>
+            <p class="project-meta">South African tertiary applications</p>
+            <p>
+              Find the right South African university or college faster. Explore courses and entry
+              requirements, then filter your options in one streamlined guide.
+            </p>
+            <p class="project-context">
+              Vue.js and Bootstrap frontend, backed by a Node.js and Express API with MySQL.
+            </p>
+            <div class="project-tech">
+              <span>Vue 60.7%</span>
+              <span>JavaScript 34.4%</span>
+              <span>CSS 4.1%</span>
+              <span>HTML 0.4%</span>
+              <span>Dockerfile 0.2%</span>
+              <span>Batchfile 0.1%</span>
+              <span>Other 0.1%</span>
             </div>
           </div>
         </div>
